@@ -1,0 +1,15 @@
+flask
+flask-wtf
+flask-sqlalchemy
+flask-restful
+flask-cors
+pytest
+pytest-flask
+flask-testing
+# pytest-cov
+# pytest-mock
+# pytest-flask
+# pytest-flask-sqlalchemy
+# pytest-flask-login
+# pytest-flask-login
+

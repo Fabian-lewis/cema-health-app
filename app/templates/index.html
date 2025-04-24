@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Health Program Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">Welcome, Doctor</h2>
+            <p class="text-muted">Here's an overview of your health program management system.</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Programs</h6>
+                            <h2 class="card-title mb-0">{{ total_programs }}</h2>
+                        </div>
+                        <i class="fas fa-clipboard-list fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Registered Clients</h6>
+                            <h2 class="card-title mb-0">{{ total_clients }}</h2>
+                        </div>
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Active Enrollments</h6>
+                            <h2 class="card-title mb-0">{{ active_enrollments }}</h2>
+                        </div>
+                        <i class="fas fa-clipboard-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="create_program.html" class="btn btn-primary w-100">
+                                <i class="fas fa-plus-circle me-2"></i>Create Program
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="register_client.html" class="btn btn-success w-100">
+                                <i class="fas fa-user-plus me-2"></i>Register Client
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="enroll_client.html" class="btn btn-info w-100">
+                                <i class="fas fa-clipboard-check me-2"></i>Enroll Client
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="search_client.html" class="btn btn-secondary w-100">
+                                <i class="fas fa-search me-2"></i>Search Client
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity</h5>
+                    <div class="list-group">
+                        {% for activity in recent_activities %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ activity.title }}</h6>
+                                <small class="text-muted">{{ activity.timestamp }}</small>
+                            </div>
+                            <p class="mb-1">{{ activity.description }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
