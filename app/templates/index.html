@@ -7,8 +7,8 @@
     <!-- Welcome Section -->
     <div class="row mb-4">
         <div class="col-12">
-            <h2 class="mb-3">Welcome, Doctor</h2>
-            <p class="text-muted">Here's an overview of your health program management system.</p>
+            <h2 class="mb-3">Welcome, {% if current_user.is_authenticated %}{{ current_user.name }}{% else %}Doctor{% endif %}</h2>
+            <p class="text-muted">Here is an overview of your health program management system.</p>
         </div>
     </div>
 
@@ -55,6 +55,64 @@
         </div>
     </div>
 
+    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+    <!-- Admin Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Users</h6>
+                            <h2 class="card-title mb-0">{{ total_users }}</h2>
+                        </div>
+                        <i class="fas fa-user-shield fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Active Sessions</h6>
+                            <h2 class="card-title mb-0">{{ active_sessions }}</h2>
+                        </div>
+                        <i class="fas fa-user-clock fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">System Health</h6>
+                            <h2 class="card-title mb-0">{{ system_health }}%</h2>
+                        </div>
+                        <i class="fas fa-heartbeat fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Storage Used</h6>
+                            <h2 class="card-title mb-0">{{ storage_used }}%</h2>
+                        </div>
+                        <i class="fas fa-database fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Quick Actions -->
     <div class="row mb-4">
         <div class="col-12">
@@ -63,26 +121,53 @@
                     <h5 class="card-title">Quick Actions</h5>
                     <div class="row">
                         <div class="col-md-3 mb-3">
-                            <a href="create_program.html" class="btn btn-primary w-100">
+                            <a href="{{ url_for('main.create_program') }}" class="btn btn-primary w-100">
                                 <i class="fas fa-plus-circle me-2"></i>Create Program
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <a href="register_client.html" class="btn btn-success w-100">
+                            <a href="{{ url_for('main.register_client') }}" class="btn btn-success w-100">
                                 <i class="fas fa-user-plus me-2"></i>Register Client
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <a href="enroll_client.html" class="btn btn-info w-100">
+                            <a href="{{ url_for('main.enroll_client') }}" class="btn btn-info w-100">
                                 <i class="fas fa-clipboard-check me-2"></i>Enroll Client
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <a href="search_client.html" class="btn btn-secondary w-100">
+                            <a href="{{ url_for('main.search_client') }}" class="btn btn-secondary w-100">
                                 <i class="fas fa-search me-2"></i>Search Client
                             </a>
                         </div>
                     </div>
+
+                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <hr>
+                    <h5 class="card-title mt-3">Admin Actions</h5>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('main.manage_users') }}" class="btn btn-warning w-100">
+                                <i class="fas fa-users-cog me-2"></i>Manage Users
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('main.system_settings') }}" class="btn btn-warning w-100">
+                                <i class="fas fa-cog me-2"></i>System Settings
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('main.audit_logs') }}" class="btn btn-warning w-100">
+                                <i class="fas fa-history me-2"></i>Audit Logs
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('main.reports') }}" class="btn btn-warning w-100">
+                                <i class="fas fa-chart-bar me-2"></i>Reports
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Search Clients{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-4">Search Clients</h2>
+            
+            <!-- Search Input -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" id="searchInput" class="form-control form-control-lg" 
+                                       placeholder="Search by client name..." autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex gap-2">
+                                <select id="programFilter" class="form-select">
+                                    <option value="">All Programs</option>
+                                    <!-- Programs will be populated dynamically -->
+                                </select>
+                                <select id="ageFilter" class="form-select">
+                                    <option value="">All Ages</option>
+                                    <option value="0-18">0-18</option>
+                                    <option value="19-30">19-30</option>
+                                    <option value="31-50">31-50</option>
+                                    <option value="51+">51+</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Program</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="searchResults">
+                                <!-- Results will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="text-center d-none">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const programFilter = document.getElementById('programFilter');
+    const ageFilter = document.getElementById('ageFilter');
+    const searchResults = document.getElementById('searchResults');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    
+    let debounceTimer;
+    
+    // Function to perform search
+    async function performSearch() {
+        const searchTerm = searchInput.value.trim();
+        const program = programFilter.value;
+        const age = ageFilter.value;
+        
+        if (searchTerm.length < 2) {
+            searchResults.innerHTML = '<tr><td colspan="5" class="text-center">Please enter at least 2 characters to search</td></tr>';
+            return;
+        }
+        
+        loadingSpinner.classList.remove('d-none');
+        
+        try {
+            const response = await fetch(`/api/search-clients?q=${encodeURIComponent(searchTerm)}&program=${program}&age=${age}`);
+            const data = await response.json();
+            
+            if (data.clients.length === 0) {
+                searchResults.innerHTML = '<tr><td colspan="5" class="text-center">No clients found</td></tr>';
+            } else {
+                searchResults.innerHTML = data.clients.map(client => `
+                    <tr>
+                        <td>${client.name}</td>
+                        <td>${client.age}</td>
+                        <td>${client.program || 'Not enrolled'}</td>
+                        <td>
+                            <span class="badge ${client.status === 'Active' ? 'bg-success' : 'bg-warning'}">
+                                ${client.status}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/client/${client.id}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            searchResults.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error performing search</td></tr>';
+        } finally {
+            loadingSpinner.classList.add('d-none');
+        }
+    }
+    
+    // Debounce search input
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(performSearch, 300);
+    });
+    
+    // Handle filter changes
+    programFilter.addEventListener('change', performSearch);
+    ageFilter.addEventListener('change', performSearch);
+    
+    // Initial state
+    searchResults.innerHTML = '<tr><td colspan="5" class="text-center">Enter a name to search for clients</td></tr>';
+});
+</script>
+{% endblock %}

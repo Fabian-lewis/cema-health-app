@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Enroll Client in Program(s){% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Enroll Client in Program(s)</h2>
+    
+    <!-- Client Search Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Select Client</h5>
+            <div class="mb-3">
+                <label for="clientSearch" class="form-label">Search for Client</label>
+                <input type="text" class="form-control" id="clientSearch" placeholder="Enter client name or ID">
+                <div id="clientSearchResults" class="list-group mt-2" style="display: none;">
+                    <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Program Selection Section (Initially Hidden) -->
+    <div id="programSelection" class="card mb-4" style="display: none;">
+        <div class="card-body">
+            <h5 class="card-title">Available Programs</h5>
+            <div id="programList">
+                <!-- Programs will be populated here -->
+            </div>
+            <button id="enrollButton" class="btn btn-primary mt-3" disabled>Enroll Selected Programs</button>
+        </div>
+    </div>
+
+    <!-- Previous Enrollments Section -->
+    <div id="previousEnrollments" class="card" style="display: none;">
+        <div class="card-body">
+            <h5 class="card-title">Previous Enrollments</h5>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Program Name</th>
+                            <th>Enrollment Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="enrollmentsTableBody">
+                        <!-- Previous enrollments will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Success</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Client has been successfully enrolled in the selected program(s).</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const clientSearch = document.getElementById('clientSearch');
+        const clientSearchResults = document.getElementById('clientSearchResults');
+        const programSelection = document.getElementById('programSelection');
+        const previousEnrollments = document.getElementById('previousEnrollments');
+        const enrollButton = document.getElementById('enrollButton');
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+
+        // Client search functionality
+        clientSearch.addEventListener('input', function() {
+            const searchTerm = this.value.trim();
+            if (searchTerm.length >= 2) {
+                // TODO: Implement actual client search API call
+                // For now, using mock data
+                const mockResults = [
+                    { id: 1, name: 'John Doe', email: 'john@example.com' },
+                    { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
+                ];
+                
+                displaySearchResults(mockResults);
+            } else {
+                clientSearchResults.style.display = 'none';
+            }
+        });
+
+        function displaySearchResults(results) {
+            clientSearchResults.innerHTML = '';
+            results.forEach(client => {
+                const item = document.createElement('a');
+                item.href = '#';
+                item.className = 'list-group-item list-group-item-action';
+                item.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">${client.name}</h6>
+                        <small>${client.email}</small>
+                    </div>
+                `;
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    selectClient(client);
+                });
+                clientSearchResults.appendChild(item);
+            });
+            clientSearchResults.style.display = 'block';
+        }
+
+        function selectClient(client) {
+            clientSearch.value = client.name;
+            clientSearchResults.style.display = 'none';
+            
+            // Show program selection and previous enrollments
+            programSelection.style.display = 'block';
+            previousEnrollments.style.display = 'block';
+            
+            // TODO: Implement actual API calls to fetch programs and previous enrollments
+            loadPrograms();
+            loadPreviousEnrollments(client.id);
+        }
+
+        function loadPrograms() {
+            // TODO: Implement actual program loading API call
+            const mockPrograms = [
+                { id: 1, name: 'Weight Management Program' },
+                { id: 2, name: 'Diabetes Prevention Program' },
+                { id: 3, name: 'Smoking Cessation Program' }
+            ];
+
+            const programList = document.getElementById('programList');
+            programList.innerHTML = '';
+            
+            mockPrograms.forEach(program => {
+                const div = document.createElement('div');
+                div.className = 'form-check mb-2';
+                div.innerHTML = `
+                    <input class="form-check-input" type="checkbox" value="${program.id}" id="program${program.id}">
+                    <label class="form-check-label" for="program${program.id}">
+                        ${program.name}
+                    </label>
+                `;
+                programList.appendChild(div);
+            });
+
+            // Enable enroll button when at least one program is selected
+            const checkboxes = programList.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const hasSelected = Array.from(checkboxes).some(cb => cb.checked);
+                    enrollButton.disabled = !hasSelected;
+                });
+            });
+        }
+
+        function loadPreviousEnrollments(clientId) {
+            // TODO: Implement actual previous enrollments API call
+            const mockEnrollments = [
+                { programName: 'Weight Management Program', date: '2024-01-15', status: 'Active' },
+                { programName: 'Diabetes Prevention Program', date: '2023-11-20', status: 'Completed' }
+            ];
+
+            const tbody = document.getElementById('enrollmentsTableBody');
+            tbody.innerHTML = '';
+            
+            mockEnrollments.forEach(enrollment => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${enrollment.programName}</td>
+                    <td>${enrollment.date}</td>
+                    <td>${enrollment.status}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Handle enroll button click
+        enrollButton.addEventListener('click', function() {
+            const selectedPrograms = Array.from(document.querySelectorAll('#programList input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+            
+            // TODO: Implement actual enrollment API call
+            console.log('Enrolling in programs:', selectedPrograms);
+            
+            // Show success message
+            successModal.show();
+            
+            // Reset form
+            setTimeout(() => {
+                programSelection.style.display = 'none';
+                previousEnrollments.style.display = 'none';
+                clientSearch.value = '';
+                enrollButton.disabled = true;
+            }, 2000);
+        });
+    });
+</script>
+{% endblock %}
