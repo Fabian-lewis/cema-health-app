@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>User Details</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Basic Information</h4>
+                    <table class="table">
+                        <tr>
+                            <th>Username:</th>
+                            <td>{{ user.username }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone:</th>
+                            <td>{{ user.phone }}</td>
+                        </tr>
+                        <tr>
+                            <th>Role:</th>
+                            <td>{{ user.role }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created At:</th>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                {% if client_profile %}
+                <div class="col-md-6">
+                    <h4>Client Profile</h4>
+                    <table class="table">
+                        <tr>
+                            <th>Full Name:</th>
+                            <td>{{ client_profile.full_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ client_profile.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone:</th>
+                            <td>{{ client_profile.phone }}</td>
+                        </tr>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('main.manage_users') }}" class="btn btn-secondary">Back to User Management</a>
+                <form method="POST" action="{{ url_for('main.delete_user', user_id=user.id) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

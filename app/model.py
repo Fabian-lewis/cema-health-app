@@ -1,8 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash
+from sqlalchemy import text
+from sqlalchemy.orm import sessionmaker
+
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     ROLES = ['admin', 'doctor', 'client']
@@ -13,15 +18,18 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime, default=datetime.utcnow)
 
     client_profile = db.relationship('Client', backref='user', uselist=False)
     notifications = db.relationship('Notification', backref='user', lazy=True)
     doctor_appointments = db.relationship('Appointment', backref='doctor', lazy=True, foreign_keys='Appointment.doctor_id')
 
-
     def __repr__(self):
         return f"<User {self.username}, role = {self.role}>"
     
+
+
+
 class Client(db.Model):
     __tablename__ = 'clients'
 

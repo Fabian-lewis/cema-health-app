@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Health Program{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Health Program</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('main.edit_program', program_id=program.id) }}">
+                        <div class="mb-3">
+                            <label for="program_name" class="form-label">Program Name</label>
+                            <input type="text" class="form-control" id="program_name" name="program_name" value="{{ program.name }}" required>
+                            <div class="form-text">Enter the name of the health program (e.g., HIV, TB)</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ program.description }}</textarea>
+                            <div class="form-text">Provide a brief description of the program</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ program.start_date }}" required>
+                            <div class="form-text">Specify the start date of the program</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Program Duration</label>
+                            <input type="number" class="form-control" id="duration" name="duration" value="{{ program.duration }}" required>
+                            <div class="form-text">Specify the program duration (in weeks)</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Program</button>
+                            <a href="{{ url_for('main.create_program') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% endblock %}

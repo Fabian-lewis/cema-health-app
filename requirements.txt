@@ -6,6 +6,8 @@ flask-cors
 pytest
 pytest-flask
 flask-testing
+flask-login
+flask-migrate
 # pytest-cov
 # pytest-mock
 # pytest-flask

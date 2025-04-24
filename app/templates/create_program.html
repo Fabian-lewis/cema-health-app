@@ -12,7 +12,7 @@
                     <h4 class="mb-0">Create New Health Program</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ url_for('main.create_program') }}">
+                    <form method="POST" action="{{ url_for('main.add_program') }}">
                         <div class="mb-3">
                             <label for="program_name" class="form-label">Program Name</label>
                             <input type="text" class="form-control" id="program_name" name="program_name" required>
@@ -26,15 +26,15 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="target_demographic" class="form-label">Target Demographic</label>
-                            <input type="text" class="form-control" id="target_demographic" name="target_demographic">
-                            <div class="form-text">Optional: Specify the target population (e.g., "Adults 18-45", "Pregnant Women")</div>
+                            <label for="start_date" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                            <div class="form-text">Optional: Specify the start date of the program</div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="duration" class="form-label">Program Duration</label>
-                            <input type="text" class="form-control" id="duration" name="duration">
-                            <div class="form-text">Optional: Specify the program duration (e.g., "6 months", "1 year")</div>
+                            <input type="number" class="form-control" id="duration" name="duration" required>
+                            <div class="form-text">Specify the program duration ("In weeks eg 3, 5, 10 ")</div>
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Create Program</button>
@@ -51,20 +51,25 @@
                 </div>
                 <div class="card-body">
                     <div class="list-group">
-                        {% for program in existing_programs %}
+                        {% for program in programs %}
                         <div class="list-group-item">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-1">{{ program.name }}</h6>
-                                    <small class="text-muted">{{ program.description[:50] }}...</small>
+                                    <p><small class="text-muted">{{ program.description}}</small></p>
+                                    <p><small class="text-muted">Start Date: {{ program.start_date }}</small></p>
+                                    <p><small class="text-muted">Duration: {{ program.duration }} weeks</small></p>
                                 </div>
                                 <div>
                                     <a href="{{ url_for('main.edit_program', program_id=program.id) }}" class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{{ url_for('main.delete_program', program_id=program.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this program?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+
+                                    <form action="{{ url_for('main.delete_program', program_id=program.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this program?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
