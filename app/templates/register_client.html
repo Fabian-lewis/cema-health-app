@@ -44,11 +44,11 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    {{ form.age.label(class="form-label") }}
-                                    {{ form.age(class="form-control") }}
-                                    {% if form.age.errors %}
+                                    {{ form.date_of_birth.label(class="form-label") }}
+                                    {{ form.date_of_birth(class="form-control") }}
+                                    {% if form.date_of_birth.errors %}
                                         <div class="invalid-feedback d-block">
-                                            {% for error in form.age.errors %}
+                                            {% for error in form.date_of_birth.errors %}
                                                 {{ error }}
                                             {% endfor %}
                                         </div>
@@ -97,35 +97,6 @@
                                 {% endif %}
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <div class="form-group">
-                                {{ form.address.label(class="form-label") }}
-                                {{ form.address(class="form-control") }}
-                                {% if form.address.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.address.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-group">
-                                {{ form.program_id.label(class="form-label") }}
-                                {{ form.program_id(class="form-select") }}
-                                {% if form.program_id.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.program_id.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Register Client</button>
                         </div>

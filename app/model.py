@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, default=datetime.utcnow)
 
-    client_profile = db.relationship('Client', backref='user', uselist=False)
+    client_profile = db.relationship('Client', backref='user', uselist=False, foreign_keys='Client.registered_by')
     notifications = db.relationship('Notification', backref='user', lazy=True)
     doctor_appointments = db.relationship('Appointment', backref='doctor', lazy=True, foreign_keys='Appointment.doctor_id')
 
@@ -39,9 +39,12 @@ class Client(db.Model):
     gender = db.Column(db.String(10))
     phone = db.Column(db.String(50))
     email = db.Column(db.String(100))
+    registered_at = db.Column(db.DateTime, default=datetime.utcnow)
+    registered_by = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_client_registered_by'), nullable=False)
 
     enrollments = db.relationship('Enrollment', backref='client', lazy=True)
     appointments = db.relationship('Appointment', backref='client', lazy=True)
+
 
     def __repr__(self):
         return f"<Client {self.id}, {self.full_name}>"

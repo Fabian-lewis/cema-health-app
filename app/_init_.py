@@ -2,6 +2,7 @@ from flask import Flask
 from app.model import db, User
 from werkzeug.security import generate_password_hash
 from flask_login import LoginManager
+from flask_migrate import Migrate
 
 # def create_admin_if_not_exists():
 #     existing_admin = User.query.filter_by(role='admin').first()
@@ -31,6 +32,7 @@ def create_app():
     app.secret_key = 'health-app'
 
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     # with app.app_context():
     #     #db.drop_all()

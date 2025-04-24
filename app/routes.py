@@ -90,13 +90,31 @@ def create_program():
     programs = Program.query.all()
     return render_template('create_program.html', programs=programs)
 
-@main.route('/register', methods=['GET', 'POST'])
+@main.route('/register-client', methods=['GET', 'POST'])
 @login_required
 def register_client():
+    #check if the user is admin or doctor
+    if current_user.role != 'admin' and current_user.role != 'doctor':
+        flash('You are not authorized to register a client', 'danger')
+        return redirect(url_for('main.index'))
+    
     form = ClientRegistrationForm()
     
+    #check if the form is valid
     if form.validate_on_submit():
-        # Handle registration logic here
+
+        #create a new client
+        new_client = Client(
+            full_name=f"{form.first_name.data} {form.last_name.data}",
+            date_of_birth=form.date_of_birth.data,
+            gender=form.gender.data,
+            phone=form.phone.data,
+            email=form.email.data,
+            registered_by=current_user.id,
+            registered_at=datetime.utcnow()
+        )
+        db.session.add(new_client)
+        db.session.commit()
         flash("Client registered successfully!", "success")
         return redirect(url_for('main.register_client'))
 
