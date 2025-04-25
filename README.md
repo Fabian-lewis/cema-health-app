@@ -1,124 +1,156 @@
-# Health Program Management System
+# 🏥 Health Program Management System
 
-This project is a Flask-based web application designed to manage health programs, clients, and user interactions for clinics or health organizations. It supports role-based access for admins, doctors, and clients, and allows the scheduling of appointments, enrollment into programs, and sending notifications.
-
-## 🔧 Technologies Used
-
-- **Flask** – Lightweight Python web framework
-- **Flask-SQLAlchemy** – ORM for handling SQLite database
-- **SQLite** – Simple and fast database for development
-- **HTML/CSS/JavaScript** – Frontend (currently under development)
-
-
-## 📂 Features Implemented
-
----
-### ✅ Views/ Pages
-### 1. **Admin Dashboard**
-   - **Purpose**: Admins will be able to manage the entire system, including overseeing client profiles, program enrollments, appointments, and notifications.
-   - **Features**:
-     - View and manage all users (Doctors, Clients)
-     - Create, edit, and delete programs
-     - Track client enrollments
-     - Review appointment statuses and notes
-     - Send notifications to users
-     - Admin-related reports and analytics (future)
-
-### 2. **Doctor Dashboard**
-   - **Purpose**: Doctors can manage their appointments and client interactions for the programs they oversee.
-   - **Features**:
-     - View and manage appointments for their clients
-     - Add notes to appointments after client visits
-     - Review client program enrollments and status updates
-     - Update the status of appointments (Scheduled, Completed, etc.)
-
-### 3. **Client Profile Page**
-   - **Purpose**: Clients can view and manage their profiles and appointment details.
-   - **Features**:
-     - View personal information (name, date of birth, contact info)
-     - Track program enrollments and statuses
-     - Review upcoming appointments and appointment notes
-     - Receive notifications about their enrollment or appointments
-
-### 4. **Registration Page**
-   - **Purpose**: Clients can register and create their profile in the system.
-   - **Features**:
-     - Input personal information like full name, date of birth, gender, phone, email
-     - Choose a program to enroll in
-     - Submit registration details and become part of the system
-     - Email confirmation upon successful registration (future feature)
-
-### 5. **Appointment Scheduling Page**
-   - **Purpose**: Allows doctors and clients to view and schedule appointments.
-   - **Features**:
-     - Clients can request appointments for specific programs
-     - Doctors can view and accept/reject appointment requests
-     - Set and update appointment statuses (Scheduled, Completed)
-     - Doctors can add notes after client visits
-
-### 6. **Notification Center**
-   - **Purpose**: Users can view notifications related to their appointments, enrollments, or other updates.
-   - **Features**:
-     - Notifications for new appointments, status updates, or system-wide changes
-     - Mark notifications as read/unread
-     - View messages related to program status changes
+A Flask-based web application built to manage health programs, clients, appointments, and notifications for clinics or health organizations. It features role-based access for admins, doctors, and clients.
 
 ---
 
-### ✅ Core Models
+## 🚀 Technologies Used
 
-1. **User**
-   - Fields: `username`, `email`, `phone`, `password_hash`, `role`, `created_at`
-   - Roles: `'admin'`, `'doctor'`, `'client'`
-   - Relationships:
-     - One-to-one with `Client` (for client profile)
-     - One-to-many with `Notification`
-     - One-to-many with `Appointment` (as doctor)
-
-2. **Client**
-   - Fields: `full_name`, `date_of_birth`, `gender`, `phone`, `email`
-   - Linked to `User`
-   - Relationships:
-     - Many-to-many with `Program` via `Enrollment`
-     - One-to-many with `Appointment`
-
-3. **Program**
-   - Fields: `name`, `description`, `start_date`, `duration`
-   - Linked to `Enrollment` and `Appointment`
-
-4. **Enrollment**
-   - Links clients to programs with statuses
-   - Includes `start_date`, `end_date`, and optional notes
-
-5. **Status**
-   - Used across `Enrollment`, `Notification`, and `Appointment` to represent states (e.g., enrolled, scheduled, completed, read/unread)
-
-6. **Notification**
-   - Sent to users
-   - Contains a message and associated status (e.g., read/unread)
-
-7. **Appointment**
-   - Links clients and doctors to specific programs
-   - Tracks `appointment_date`, `status`, and doctor notes
+- **Flask** – Lightweight Python web framework  
+- **Flask-SQLAlchemy** – ORM for SQLite database handling  
+- **SQLite** – Lightweight database for fast development  
+- **HTML/CSS/JavaScript** – Frontend interface  
 
 ---
 
-## 💾 Database Schema Overview
+## 📌 Key Features
+
+### 🔐 Role-Based Dashboards
+
+#### 1. **Admin Dashboard**
+- View and manage all users (doctors, clients)
+- Create, edit, and delete health programs
+- Monitor client enrollments
+- Track and manage appointments and their statuses
+- (Planned) Admin reports and analytics
+- (Planned) Send notifications
+
+#### 2. **Doctor Dashboard**
+- View appointments assigned to them
+- Add notes after client visits
+- Monitor program enrollments and statuses for their clients
+- Update appointment statuses (Scheduled, Completed, etc.)
+- 
+
+### 📝 Other Core Pages
+
+#### 4. **Client Registration**
+- Submit personal info (name, DOB, gender, phone, email)
+- Auto-create profile in system
+- (Planned) Email confirmation
+
+#### 5. **Enroll Clients**
+- Search for and select a client
+- Select the program to enroll the client
+- Enroll user
+- (If user is already enrolled in a program then he/she cannot be enrolled again)
+
+#### 6. **Search Client**
+- Search for a client from the registered list of clients
+- Enter clients name or filter by age or program
+- Results populate in the results table showing name, age, gender, phone, enrollments and actions
+- Click on view action to access the Clients Profile
+
+#### 7. **Clients Profile**
+- Accessed by searching for the client in search page
+- Displays clients information categorized in different groups (Personal information, enrolled programs, upcoming appointments, dropped programs, meta data)
+- Personal Information - displays a clients personal info (name, date of birth, email etc)
+- Enrolled Programs - displays programs clients have been enrolled in
+- Dropped Programs - Displays programs that a user has been dropped off from
+- upcoming appointments (planned) - to display booked appointments for the client
+
+### 📌Admin Specific Pages
+
+#### 1. **Manage Users Page**
+- Admins can add and view all the existing users in the system
+- Insert data for the new user in the new user form
+- Existing user form displays existing users and delete and view actions for each user
+- View action displays the user detais in view_user page
+- Delete deletes user
+
+### 2. **View Clients Page**
+- Displays all the registered clients
+- Add new client feature to add a new client
+- View user action (on table) to view a clients profile
+- Delete user action (on table) to delete a clients profile
+- (planned) Edit user action (on table) to edit a clients profile
+- (planned) Export to CSV - get all users in downloadable CSV file
+
+### 3. **Reports Page**
+- (Plannned) - To display metric statistics and analysis 
+
+
+---
+
+## 🧩 Core Models & Relationships
+
+### 1. **User**
+- Fields: `username`, `email`, `phone`, `password_hash`, `role`, `created_at`
+- Roles: `'admin'`, `'doctor'`, `'client'`
+- Relations:
+  - One-to-one: `Client` (for profile)
+  - One-to-many: `Appointment` (as doctor), `Notification`
+
+### 2. **Client**
+- Fields: `full_name`, `date_of_birth`, `gender`, `phone`, `email`
+- Linked to `User`
+- Relations:
+  - Many-to-many: `Program` (via `Enrollment`)
+  - One-to-many: `Appointment`
+
+### 3. **Program**
+- Fields: `name`, `description`, `start_date`, `duration`
+- Linked to: `Enrollment`, `Appointment`
+
+### 4. **Enrollment**
+- Links `Client` ↔ `Program`
+- Fields: `start_date`, `end_date`, `status_id`, `notes`
+
+### 5. **Appointment**
+- Links `Client` ↔ `Doctor` ↔ `Program`
+- Tracks appointment date, status, and doctor notes
+
+### 6. **Notification**
+- Linked to a `User`
+- Contains a message and `status_id` (read/unread)
+
+### 7. **Status**
+- Shared by: `Enrollment`, `Appointment`, `Notification`
+- Represents status types (e.g., Enrolled, Completed, Read)
+
+---
+
+## 🧱 Database Schema Overview
 
 ```plaintext
 User (1) —— (1) Client
 User (1) —— (M) Notification
 User (1) —— (M) Appointment [as doctor]
+
 Client (1) —— (M) Enrollment —— (1) Program
 Client (1) —— (M) Appointment —— (1) Doctor
+
 Enrollment —— (1) Status
 Notification —— (1) Status
 Appointment —— (1) Status
 
 ```
-## 🔑 Current Functionality
-1. **Database structure defined with relationships**
-2. **Roles and user modeling in place**
-3. **Appointments and notifications architecture ready**
-4. **Support for clients to have user accounts and access profiles**
+## ✅ Current System Functionality
+- Full database schema with defined relationships
+- User roles and access control implemented
+- User and Client registration implemented
+- Clients have user accounts and personalized profiles
+- Enrollment logic with duplication checks (active status only)
+- Search functionality with links to client's profile
+
+## 🛠️ What to Work On
+  1. Add admin reports and analytics
+  2. Implement email notifications
+  3. Improve form validation and error messages
+  4. Notifications module
+  5. Appointments module - schedule and book
+ 
+## 📷 Screenshots
+
+### 1. **Login Module**
 
