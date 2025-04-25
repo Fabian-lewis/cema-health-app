@@ -208,5 +208,5 @@ Appointment —— (1) Status
 **Fabian Ndung'u**
 Aspiring software engineer with a passion for building impactful systems and solving real-world problems using code.  
 - 🔗 [GitHub](https://github.com/Fabian-lewis)
-- 📧 fabitolewi@gmail.com
+- 📧 [Email](fabitolewi@gmail.com)
 - 💼 Open to collaboration and new opportunities!
