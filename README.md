@@ -13,6 +13,44 @@ A Flask-based web application built to manage health programs, clients, appointm
 
 ---
 
+## 📁 Project Structure
+
+```
+health_program/ ├── app/
+|   ├── api/
+│   │   ├── _init_.py – API factory
+│   │   ├── routes.py – APIs endpoints
+│   ├── init.py – App factory and extension setup
+│   ├── models.py – SQLAlchemy models (User, Client, Program, etc.)
+│   ├── routes/ – Blueprint route modules
+│   ├── templates/ – HTML templates
+│   │   ├── base.html – Shared layout
+│   │   ├── index.html – Dashboard
+│   │   ├── manage_users.html – Admin page for adding new users
+│   │   ├── view_clients.html – Admin page for viewing clients
+│   │   ├── create_program.html – page for creating a new program
+│   │   ├── enroll_client.html – page for enrolling a client to a program
+│   │   ├── register_client.html – page for registering a client 
+│   │   ├── search_client.html – page to search for a user
+│   │   ├── client_profile.html – page for the clients profile
+│   │   ├── reports.html – page for reports
+│   │   ├── edit_client.html – page for editing a client
+│   │   ├── edit_program.html – page for editing a program
+│   │   ├── login.html – page for login in
+│   ├── static/ – CSS, JS, and images
+│   ├── forms.py – WTForms for handling input
+│   ├── utils.py – Helper functions (e.g., name matching, date logic)
+│   └── config.py – Configuration settings
+├── instance/
+│   └── cients.db – SQLite database file
+├── run.py – Main app entry point
+├── requirements.txt – Python dependencies
+├── README.md – Project documentation
+├── migrations - For modifications done on the database
+└── .venv – Environment variables
+
+```
+
 ## 📌 Key Features
 
 ### 🔐 Role-Based Dashboards
@@ -25,12 +63,13 @@ A Flask-based web application built to manage health programs, clients, appointm
 - (Planned) Admin reports and analytics
 - (Planned) Send notifications
 
+
 #### 2. **Doctor Dashboard**
 - View appointments assigned to them
 - Add notes after client visits
 - Monitor program enrollments and statuses for their clients
 - Update appointment statuses (Scheduled, Completed, etc.)
-- 
+
 
 ### 📝 Other Core Pages
 
@@ -39,17 +78,20 @@ A Flask-based web application built to manage health programs, clients, appointm
 - Auto-create profile in system
 - (Planned) Email confirmation
 
+
 #### 5. **Enroll Clients**
 - Search for and select a client
 - Select the program to enroll the client
 - Enroll user
 - (If user is already enrolled in a program then he/she cannot be enrolled again)
 
+
 #### 6. **Search Client**
 - Search for a client from the registered list of clients
 - Enter clients name or filter by age or program
 - Results populate in the results table showing name, age, gender, phone, enrollments and actions
 - Click on view action to access the Clients Profile
+
 
 #### 7. **Clients Profile**
 - Accessed by searching for the client in search page
@@ -59,7 +101,8 @@ A Flask-based web application built to manage health programs, clients, appointm
 - Dropped Programs - Displays programs that a user has been dropped off from
 - upcoming appointments (planned) - to display booked appointments for the client
 
-### 📌Admin Specific Pages
+
+## 📌Admin Specific Pages
 
 #### 1. **Manage Users Page**
 - Admins can add and view all the existing users in the system
@@ -154,3 +197,16 @@ Appointment —— (1) Status
 
 ### 1. **Login Module**
 
+## 🤝 Contributions & Feedback
+**Feel free to fork the repo, raise issues, or suggest improvements.**
+
+## 📄 License
+**MIT License – feel free to use and modify for personal or educational use.**
+
+
+## 👨‍💻 Author
+**Fabian Ndung'u**
+Aspiring software engineer with a passion for building impactful systems and solving real-world problems using code.  
+- 🔗 [GitHub](https://github.com/Fabian-lewis)
+- 📧 fabitolewi@gmail.com
+- 💼 Open to collaboration and new opportunities!
