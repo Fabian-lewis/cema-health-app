@@ -195,7 +195,26 @@ Appointment —— (1) Status
  
 ## 📷 Screenshots
 
-### 1. **Login Module**
+### 1. **Login**
+![login](app/static/images/login_test.JPG)
+
+### 2. **Admin Dashboard**
+![admin dashboard](app/static/images/admin_dashboard.JPG)
+
+### 3. **Doctor Dashboard**
+![doctor dashboard](app/static/images/doctor_dashboard.JPG)
+
+### 4. **Client Profile**
+![client_profile](app/static/images/client_profile.JPG)
+
+### 5. **Enroll Client**
+![Enroll client](app/static/images/enroll_client.JPG)
+
+### 6. **Register Client**
+![Register client](app/static/images/register_client.JPG)
+
+### 7. **Search Clients**
+![search clients](app/static/images/search_clients.JPG)
 
 ## 🤝 Contributions & Feedback
 **Feel free to fork the repo, raise issues, or suggest improvements.**
