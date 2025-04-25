@@ -5,6 +5,11 @@ from sqlalchemy.orm import joinedload
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
+# Search for clients
+# This is a get request that takes in a search term
+# It then returns a list of clients that match the search criteria.
+# It returns the client id, name, email, gender, phone, age, and the programs they are enrolled in 
+# It also returns the user that registered the client
 @api.route('/clients/search')
 def search_clients():
     query = request.args.get('q', '')
@@ -17,6 +22,8 @@ def search_clients():
         for client in results
     ])
 
+# Get all programs
+# This is a get request that returns a list of all programs
 @api.route('/programs')
 def get_programs():
     programs = Program.query.all()
@@ -25,6 +32,9 @@ def get_programs():
         for program in programs
     ])
 
+# Get all enrollments for a client
+# This is a get request that takes in a client id
+# It then returns a list of all enrollments for the client
 @api.route('/clients/<int:client_id>/enrollments')
 def get_client_enrollments(client_id):
     client = Client.query.get(client_id)
@@ -41,6 +51,9 @@ def get_client_enrollments(client_id):
         for enrollment in enrollments
     ])
 
+# Enroll client to a program
+# This is a post request that takes in a client id and a list of program ids
+# It then enrolls the client to the programs
 @api.route('/clients/<int:client_id>/enroll', methods=['POST'])
 def enroll_client(client_id):
     data = request.json
@@ -76,6 +89,11 @@ def enroll_client(client_id):
         db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 500
 
+# Search for clients
+# This is a get request that takes in a search term, program id, and age
+# It then returns a list of clients that match the search criteria.
+# It returns the client id, name, email, gender, phone, age, and the programs they are enrolled in 
+# It also returns the user that registered the client
 @api.route('/search-clients')
 def search_clients_api():
     search_term = request.args.get('q', '')
@@ -83,10 +101,17 @@ def search_clients_api():
     age = request.args.get('age', '')
 
     try:
+        """
+        This is the query that gets the clients, 
+            - their enrollments, 
+            - the programs they are enrolled in, 
+            - the status of the enrollments, 
+            - and the user that registered the client
+        """
         query = db.session.query(Client).options(
             joinedload(Client.enrollments).joinedload(Enrollment.program),
             joinedload(Client.enrollments).joinedload(Enrollment.status),
-            joinedload(Client.registered_by_user)
+            joinedload(Client.registered_by_user) # This is the user that registered the client
         )
 
         if search_term:
