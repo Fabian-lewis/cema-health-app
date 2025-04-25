@@ -81,26 +81,44 @@
         const enrollButton = document.getElementById('enrollButton');
         const successModal = new bootstrap.Modal(document.getElementById('successModal'));
 
+        let selectedClient = null;
+
+
         // Client search functionality
-        clientSearch.addEventListener('input', function() {
+        clientSearch.addEventListener('input', function () {
             const searchTerm = this.value.trim();
+
             if (searchTerm.length >= 2) {
-                // TODO: Implement actual client search API call
-                // For now, using mock data
-                const mockResults = [
-                    { id: 1, name: 'John Doe', email: 'john@example.com' },
-                    { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
-                ];
-                
-                displaySearchResults(mockResults);
+                fetch(`/api/clients/search?q=${encodeURIComponent(searchTerm)}`)
+                    .then(response => response.json())
+                    .then(clients => {
+                        displaySearchResults(clients);
+                    })
+                    .catch(error => {
+                        console.error('Error searching clients:', error);
+                        // Optional fallback
+                        const mockResults = [
+                            { id: 1, name: 'John Doe', email: 'john@example.com' },
+                            { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
+                        ];
+                        displaySearchResults(mockResults);
+                    });
             } else {
                 clientSearchResults.style.display = 'none';
             }
         });
 
-        function displaySearchResults(results) {
+
+        function displaySearchResults(clients) {
             clientSearchResults.innerHTML = '';
-            results.forEach(client => {
+
+            if (clients.length === 0) {
+                clientSearchResults.innerHTML = '<p>No clients found</p>';
+                clientSearchResults.style.display = 'block';
+                return;
+            }
+
+            clients.forEach(client => {
                 const item = document.createElement('a');
                 item.href = '#';
                 item.className = 'list-group-item list-group-item-action';
@@ -110,16 +128,19 @@
                         <small>${client.email}</small>
                     </div>
                 `;
-                item.addEventListener('click', function(e) {
+                item.addEventListener('click', function (e) {
                     e.preventDefault();
                     selectClient(client);
                 });
                 clientSearchResults.appendChild(item);
             });
+
             clientSearchResults.style.display = 'block';
         }
 
+
         function selectClient(client) {
+            selectedClient = client;
             clientSearch.value = client.name;
             clientSearchResults.style.display = 'none';
             
@@ -127,84 +148,156 @@
             programSelection.style.display = 'block';
             previousEnrollments.style.display = 'block';
             
-            // TODO: Implement actual API calls to fetch programs and previous enrollments
+            // API call to fetch programs and previous enrollments
             loadPrograms();
             loadPreviousEnrollments(client.id);
         }
 
         function loadPrograms() {
-            // TODO: Implement actual program loading API call
-            const mockPrograms = [
-                { id: 1, name: 'Weight Management Program' },
-                { id: 2, name: 'Diabetes Prevention Program' },
-                { id: 3, name: 'Smoking Cessation Program' }
-            ];
-
-            const programList = document.getElementById('programList');
-            programList.innerHTML = '';
             
-            mockPrograms.forEach(program => {
-                const div = document.createElement('div');
-                div.className = 'form-check mb-2';
-                div.innerHTML = `
-                    <input class="form-check-input" type="checkbox" value="${program.id}" id="program${program.id}">
-                    <label class="form-check-label" for="program${program.id}">
-                        ${program.name}
-                    </label>
-                `;
-                programList.appendChild(div);
-            });
+            // API call to fetch programs
+            fetch('/api/programs')
+                .then(response => response.json())
+                .then(programs => {
 
-            // Enable enroll button when at least one program is selected
-            const checkboxes = programList.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const hasSelected = Array.from(checkboxes).some(cb => cb.checked);
-                    enrollButton.disabled = !hasSelected;
+                    if (programs.length === 0) {
+                        programList.innerHTML = '<p>No programs found</p>';
+                        programList.style.display = 'block';
+                        return;
+                    }
+
+                    const programList = document.getElementById('programList');
+                    programList.innerHTML = '';
+
+                    programs.forEach(program => {
+                        const div = document.createElement('div');
+                        div.className = 'form-check mb-2';
+                        div.innerHTML = `
+                            <input class="form-check-input" type="checkbox" value="${program.id}" id="program${program.id}">
+                            <label class="form-check-label" for="program${program.id}">
+                            ${program.name}
+                            </label>
+                        `;
+                        programList.appendChild(div);
+                    });
+
+                    // Enable enroll button if at least one program is selected
+                    setupProgramCheckboxWatcher('enrollButton', 'programList');
+
+
+                })
+                .catch(error => {
+                    console.error('Error fetching programs:', error);
                 });
-            });
         }
 
         function loadPreviousEnrollments(clientId) {
-            // TODO: Implement actual previous enrollments API call
-            const mockEnrollments = [
-                { programName: 'Weight Management Program', date: '2024-01-15', status: 'Active' },
-                { programName: 'Diabetes Prevention Program', date: '2023-11-20', status: 'Completed' }
-            ];
-
-            const tbody = document.getElementById('enrollmentsTableBody');
-            tbody.innerHTML = '';
+            // API call to fetch previous enrollments for the selected client
+            fetch(`/api/clients/${clientId}/enrollments`)
+                .then(response => response.json())
+                .then(enrollments => {
+                    const tbody = document.getElementById('enrollmentsTableBody');
+                    tbody.innerHTML = '';
+                    
+                    if (enrollments.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3">No previous enrollments found</td></tr>';
+                        return;
+                    }
+                    
+                    enrollments.forEach(enrollment => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${enrollment.programName}</td>
+                            <td>${enrollment.date}</td>
+                            <td>${enrollment.status}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching previous enrollments:', error);
+                });
+        }
             
-            mockEnrollments.forEach(enrollment => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${enrollment.programName}</td>
-                    <td>${enrollment.date}</td>
-                    <td>${enrollment.status}</td>
-                `;
-                tbody.appendChild(tr);
+        // Helper to reset the enrollment form
+        function resetEnrollmentUI() {
+            // Clear selected checkboxes
+            document.querySelectorAll('#programList input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+
+            // Hide program selection and enrollments
+            programSelection.style.display = 'none';
+            previousEnrollments.style.display = 'none';
+
+            // Clear search input and results
+            clientSearch.value = '';
+            clientSearchResults.innerHTML = '';
+            clientSearchResults.style.display = 'none';
+
+            // Disable enroll button
+            enrollButton.disabled = true;
+
+            // Reset selected client
+            selectedClient = null;
+        }
+
+
+        // Handle enroll button click
+        enrollButton.addEventListener('click', function () {
+            if (!selectedClient) {
+                console.error('No client selected');
+                return;
+            }
+            const selectedPrograms = Array.from(document.querySelectorAll('#programList input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+
+
+            fetch(`/api/clients/${selectedClient.id}/enroll`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ programIds: selectedPrograms })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        successModal.show(); // Show success modal
+
+                        // Reset UI after delay
+                        setTimeout(resetEnrollmentUI, 2000);
+                    } else {
+                        console.error('Enrollment failed:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error enrolling client:', error);
+
+                    // Reset UI even on error
+                    setTimeout(resetEnrollmentUI, 2000);
+                });
+        });
+
+
+        function setupProgramCheckboxWatcher(enrollButtonId, programListId) {
+            const enrollButton = document.getElementById(enrollButtonId);
+            const checkboxes = document.querySelectorAll(`#${programListId} input[type="checkbox"]`);
+
+            function updateEnrollButtonState() {
+                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                enrollButton.disabled = !anyChecked;
+            }
+
+            // Initial state check
+            updateEnrollButtonState();
+
+            // Listen for changes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateEnrollButtonState);
             });
         }
 
-        // Handle enroll button click
-        enrollButton.addEventListener('click', function() {
-            const selectedPrograms = Array.from(document.querySelectorAll('#programList input[type="checkbox"]:checked'))
-                .map(cb => cb.value);
-            
-            // TODO: Implement actual enrollment API call
-            console.log('Enrolling in programs:', selectedPrograms);
-            
-            // Show success message
-            successModal.show();
-            
-            // Reset form
-            setTimeout(() => {
-                programSelection.style.display = 'none';
-                previousEnrollments.style.display = 'none';
-                clientSearch.value = '';
-                enrollButton.disabled = true;
-            }, 2000);
-        });
-    });
+    });                     
 </script>
 {% endblock %}
