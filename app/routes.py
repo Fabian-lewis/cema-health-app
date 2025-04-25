@@ -12,8 +12,14 @@ main = Blueprint('main', __name__)
 
 
 
+# Home page
+# This is the home page of the application
+# It shows the basic statistics of the application
+# It also shows the recent activities of the application
+# It also shows the admin statistics of the application
+# It requires the user to be logged in
 @main.route('/')
-@login_required
+@login_required # This ensures that the user is logged in
 def index():
     # Get basic statistics for all users
     total_programs = Program.query.count()
@@ -56,11 +62,14 @@ def index():
                          recent_activities=recent_activities,
                          **admin_stats)
 
-
+# Login page
+# This is the login page of the application
+# It allows the user to login to the application
+# It also allows the user to register to the application
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        logout_user()
+        logout_user() # This ensures that the user is logged first before logging in
         
     form = LoginForm()
     if form.validate_on_submit():
@@ -77,21 +86,33 @@ def login():
             flash('Invalid username or password', 'danger')
     return render_template('login.html', form=form)
 
+
+# Logout page
+# This is the logout page of the application
+# It allows the user to logout from the application
 @main.route('/logout')
-@login_required
+@login_required # This ensures that the user is logged in before logging out
 def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.login'))
 
+
+# Create program page
+# This is the create program page of the application
+# It allows the user to create a new program
 @main.route('/create-program')
-@login_required
+@login_required # This ensures that the user is logged in before creating a program
 def create_program():
     programs = Program.query.all()
     return render_template('create_program.html', programs=programs)
 
+
+# Register client page
+# This is the register client page of the application
+# It allows the user to register a new client
 @main.route('/register-client', methods=['GET', 'POST'])
-@login_required
+@login_required # This ensures that the user is logged in before registering a client
 def register_client():
     #check if the user is admin or doctor
     if current_user.role != 'admin' and current_user.role != 'doctor':
@@ -120,38 +141,76 @@ def register_client():
 
     return render_template('register_client.html', form=form)
 
+
+# Enroll client page    
+# This is the enroll client page of the application
+# It allows the user to enroll a client in a program
 @main.route('/enroll-client')
-@login_required
+@login_required # This ensures that the user is logged in before enrolling a client
 def enroll_client():
     return render_template('enroll_client.html')
 
+
+# Search client page    
+# This is the search client page of the application
+# It allows the user to search for a client
 @main.route('/search-client' , methods=['GET', 'POST'])
-@login_required
+@login_required # This ensures that the user is logged in before searching for a client
 def search_client():
     programs = Program.query.all()
     return render_template('search_client.html', programs=programs)
 
+
+# Client profile page
+# This is the client profile page of the application
+# It allows the user to view the profile of a client
 @main.route('/client/<client_id>')
-@login_required
+@login_required # This ensures that the user is logged in before viewing a client's profile
 def client_profile(client_id):
     return render_template('client_profile.html', client_id=client_id)
 
+
+# View clients page
+# This is the view clients page of the application
+# It allows the user to view all clients
 @main.route('/admin/clients')
-@login_required
+@login_required # This ensures that the user is logged in before viewing all clients
 def view_clients():
     return render_template('view_clients.html')
 
+
+# Manage users page
+# This is the manage users page of the application
+# It allows the user to manage all users
+# It also allows the user to add a new user
 @main.route('/manage-users')
-@login_required
-@admin_required
+@login_required # This ensures that the user is logged in before managing users
+@admin_required # This ensures that the user is an admin before managing users
 def manage_users():
+
+    #check if the user is admin
+    if current_user.role != 'admin':
+        flash('You are not authorized to manage users', 'danger')
+        return redirect(url_for('main.index'))
+    
     users = User.query.all()
     return render_template('manage_users.html', users=users)
 
+
+# Add user page
+# This is the add user page of the application
+# It allows the user to add a new user
 @main.route('/add-user', methods=['POST'])
-@login_required
-@admin_required
+@login_required # This ensures that the user is logged in before adding a user
+@admin_required # This ensures that the user is an admin before adding a user
 def add_user():
+
+    #check if the user is admin
+    if current_user.role != 'admin':
+        flash('You are not authorized to add a user', 'danger')
+        return redirect(url_for('main.manage_users'))
+    
+    #get the form data
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
@@ -189,13 +248,24 @@ def add_user():
     flash('User added successfully', 'success')
     return redirect(url_for('main.manage_users'))
 
+
+# Delete user page
+# This is the delete user page of the application
+# It allows only the admin to delete a user
 @main.route('/delete-user/<int:user_id>', methods=['POST'])
-@login_required
-@admin_required
+@login_required # This ensures that the user is logged in before deleting a user
+@admin_required # This ensures that the user is an admin before deleting a user
 def delete_user(user_id):
+
+    #check if the user is admin
+    if current_user.role != 'admin':
+        flash('You are not authorized to delete a user', 'danger')
+        return redirect(url_for('main.manage_users'))
+    
+    #get the user
     user = User.query.get_or_404(user_id)
     
-    # Don't allow deleting the last admin
+    # Don't allow deleting the last admin user 
     if user.role == 'admin' and User.query.filter_by(role='admin').count() <= 1:
         flash('Cannot delete the last admin user', 'danger')
         return redirect(url_for('main.manage_users'))
@@ -212,28 +282,53 @@ def delete_user(user_id):
     flash('User deleted successfully', 'success')
     return redirect(url_for('main.manage_users'))
 
+
+# View user page
+# This is the view user page of the application
+# It allows the user to view a user's profile
 @main.route('/view-user/<int:user_id>')
-@login_required
-@admin_required
+@login_required # This ensures that the user is logged in before viewing a user's profile
+@admin_required # This ensures that the user is an admin before viewing a user's profile
 def view_user(user_id):
+
+    #check if the user is admin
+    if current_user.role != 'admin':
+        flash('You are not authorized to view a user', 'danger')
+        return redirect(url_for('main.manage_users'))
+    
     user = User.query.get_or_404(user_id)
     client_profile = None
     if user.role == 'client':
         client_profile = Client.query.get(user_id)
     return render_template('view_user.html', user=user, client_profile=client_profile)
 
+
+# Reports page
+# This is the reports page of the application
+# It allows the user to view the reports of the application
 @main.route('/reports')
-@login_required
+@login_required # This ensures that the user is logged in before viewing the reports
+@admin_required # This ensures that the user is an admin before viewing the reports
 def reports():
+    #check if user is admin
+    if current_user.role != 'admin':
+        flash('You are not authorized to view the reports', 'danger')
+        return redirect(url_for('main.index'))
+    
     return render_template('reports.html')
 
+
+# Add program page
+# This is the add program page of the application
+# It allows the user to add a new program
 @main.route('/add-program', methods=['POST'])
-@login_required
+@login_required # This ensures that the user is logged in before adding a program
 def add_program():
+
     name = request.form.get('program_name')
     description = request.form.get('description')
     start_date = datetime.strptime(request.form.get('start_date'), '%Y-%m-%d').date()
-    
+
     duration = int(request.form.get('duration'))
 
     #check if the program already exists
@@ -246,7 +341,7 @@ def add_program():
         flash('Start date must be in the future', 'danger')
         return redirect(url_for('main.create_program'))
     
-
+    #check if the user is admin or doctor
     if current_user.role == 'admin' or current_user.role == 'doctor':
         program = Program(name=name, description=description, start_date=start_date, duration=duration)
         db.session.add(program)
@@ -257,9 +352,15 @@ def add_program():
         flash('You are not authorized to add a program', 'danger')
         return redirect(url_for('main.create_program'))
 
+
+# Edit program page
+# This is the edit program page of the application
+# It allows the user to edit a program
 @main.route('/edit-program/<int:program_id>', methods=['GET', 'POST'])
-@login_required
+@login_required # This ensures that the user is logged in before editing a program
 def edit_program(program_id):
+
+    #check if the user is admin or doctor
     if current_user.role != 'admin' and current_user.role != 'doctor':
         flash('You are not authorized to edit a program', 'danger')
         return redirect(url_for('main.create_program'))
@@ -290,9 +391,14 @@ def edit_program(program_id):
     return render_template('edit_program.html', program=program)
 
 
+# Delete program page   
+# This is the delete program page of the application
+# It allows only the admin or doctor to delete a program
 @main.route('/delete-program/<int:program_id>', methods=['POST'])
-@login_required
+@login_required # This ensures that the user is logged in before deleting a program
 def delete_program(program_id):
+
+    #check if the user is admin or doctor
     if current_user.role != 'admin' and current_user.role != 'doctor':
         flash('You are not authorized to delete a program', 'danger')
         return redirect(url_for('main.create_program'))
