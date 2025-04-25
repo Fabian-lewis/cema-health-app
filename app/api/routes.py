@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from app.model import Client, Program, Enrollment, db
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from sqlalchemy.orm import joinedload
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -74,4 +75,66 @@ def enroll_client(client_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 500
+
+@api.route('/search-clients')
+def search_clients_api():
+    search_term = request.args.get('q', '')
+    program_id = request.args.get('program', '')
+    age = request.args.get('age', '')
+
+    try:
+        query = db.session.query(Client).options(
+            joinedload(Client.enrollments).joinedload(Enrollment.program),
+            joinedload(Client.enrollments).joinedload(Enrollment.status),
+            joinedload(Client.registered_by_user)
+        )
+
+        if search_term:
+            query = query.filter(Client.full_name.ilike(f"%{search_term}%"))
+
+        if program_id:
+            query = query.join(Client.enrollments).filter(Enrollment.program_id == program_id)
+
+        if age:
+            try:
+                age = int(age)
+                today = date.today()
+                dob_start = today - timedelta(days=(age + 1) * 365)
+                dob_end = today - timedelta(days=age * 365)
+                query = query.filter(Client.date_of_birth.between(dob_start, dob_end))
+            except ValueError:
+                pass
+
+        clients = query.all()
+
+        return jsonify({
+            
+            'clients': [
+                {
+                    'id': client.id,
+                    'name': client.full_name,
+                    'email': client.email,
+                    'gender': client.gender,
+                    'phone': client.phone,
+                    'age': (date.today().year - client.date_of_birth.year),
+                    'registered_by': client.registered_by_user.username if client.registered_by_user else None,
+                    'enrollments': [
+                        {
+                            'program': enrollment.program.name,
+                            'status': enrollment.status.name,
+                            'start_date': enrollment.start_date.isoformat(),
+                            'end_date': enrollment.end_date.isoformat()
+                        }
+                        for enrollment in client.enrollments
+                    ]
+                }
+                for client in clients
+            ]
+        })
+
+    except Exception as e:
+        current_app.logger.error(f"Error in search_clients_api: {str(e)}")
+        return jsonify({'error': 'An error occurred while searching clients'}), 500
+
+
 

@@ -125,10 +125,11 @@ def register_client():
 def enroll_client():
     return render_template('enroll_client.html')
 
-@main.route('/search-client')
+@main.route('/search-client' , methods=['GET', 'POST'])
 @login_required
 def search_client():
-    return render_template('search_client.html')
+    programs = Program.query.all()
+    return render_template('search_client.html', programs=programs)
 
 @main.route('/client/<client_id>')
 @login_required
