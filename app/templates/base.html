@@ -113,6 +113,12 @@
                             <a class="nav-link {% if request.endpoint == 'manage_users' %}active{% endif %}" href="{{ url_for('main.manage_users') }}">
                                 <i class="fas fa-users-cog me-2"></i> Manage Users
                             </a>
+                            <a class="nav-link {% if request.endpoint == 'view_clients' %}active{% endif %}" href="{{ url_for('main.view_clients') }}">
+                                <i class="fas fa-users me-2"></i> View Clients
+                            </a>
+                            <a class="nav-link {% if request.endpoint == 'view_user' %}active{% endif %}" href="{{ url_for('main.view_user') }}">
+                                <i class="fas fa-user me-2"></i> View User
+                            </a>
                             <a class="nav-link {% if request.endpoint == 'reports' %}active{% endif %}" href="{{ url_for('main.reports') }}">
                                 <i class="fas fa-chart-bar me-2"></i> Reports
                             </a>

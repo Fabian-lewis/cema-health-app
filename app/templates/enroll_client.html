@@ -71,6 +71,25 @@
     </div>
 </div>
 
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Scripts -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -80,6 +99,7 @@
         const previousEnrollments = document.getElementById('previousEnrollments');
         const enrollButton = document.getElementById('enrollButton');
         const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
 
         let selectedClient = null;
 
@@ -268,6 +288,9 @@
                         // Reset UI after delay
                         setTimeout(resetEnrollmentUI, 2000);
                     } else {
+                        // Show error modal
+                        errorModal.show();
+                        errorMessage.textContent = data.message;
                         console.error('Enrollment failed:', data.message);
                     }
                 })

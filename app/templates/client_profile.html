@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Client Profile - {{ client.name }}{% endblock %}
+{% block title %}Client Profile - {{ client.full_name }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <h2 class="mb-4">Client Profile</h2>
+            <h2 class="mb-4">Client Profile - {{ client.full_name }}</h2>
         </div>
     </div>
 
@@ -21,7 +21,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <h6 class="text-muted">Full Name</h6>
-                            <p class="mb-3">{{ client.name }}</p>
+                            <p class="mb-3">{{ client.full_name }}</p>
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-muted">Date of Birth</h6>
@@ -66,13 +66,13 @@
                     <h4 class="mb-0">Enrolled Programs</h4>
                 </div>
                 <div class="card-body">
-                    {% if client.programs %}
-                        {% for enrollment in client.programs %}
+                    {% if enrollments %}
+                        {% for enrollment in enrollments %}
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h5 class="card-title mb-0">{{ enrollment.program.name }}</h5>
-                                    <span class="badge bg-{{ enrollment.program.status_color }}">{{ enrollment.program.status }}</span>
+                                    <span class="badge bg-{{ enrollment.status.status_color }}">{{ enrollment.status.name }}</span>
                                 </div>
                                 <p class="card-text">{{ enrollment.program.description }}</p>
                                 {% if enrollment.note %}
@@ -98,6 +98,51 @@
                 </div>
             </div>
         </div>
+
+        <!-- Appointments Column -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Upcoming Appointments</h4>
+                </div>
+                <div class="card-body">
+                    {% if appointments %}
+                        {% for appointment in appointments %}
+                            <p class="card-text"><strong>Program:</strong> {{ appointment.program.name }}</p>
+                            <p class="card-text"><strong>Date:</strong> {{ appointment.appointment_date }}</p>
+                            <p class="card-text"><strong>Status:</strong> {{ appointment.status.name }}</p>
+                            <p class="card-text"><strong>Notes:</strong> {{ appointment.notes }}</p>
+                            <p class="card-text"><strong>Doctor:</strong> {{ appointment.doctor.username }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Dropped Programs Column -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Dropped Programs</h4>
+                </div>
+                <div class="card-body">
+                    {% if dropped_enrollments %}
+                        {% for enrollment in dropped_enrollments %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <p class="card-text"><strong>Program:</strong> {{ enrollment.program.name }}</p>
+                                <p class="card-text"><strong>Status:</strong> {{ enrollment.status.name }}</p>
+                                <p class="card-text"><strong>Enrollment Date:</strong> {{ enrollment.enrollment_date }}</p>
+                                <p class="card-text"><strong>Start Date:</strong> {{ enrollment.start_date }}</p>
+                                <p class="card-text"><strong>Expected End Date:</strong> {{ enrollment.end_date }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
     </div>
 
     <!-- Metadata Section -->
@@ -108,12 +153,12 @@
                     <div class="row">
                         <div class="col-md-6">
                             <small class="text-muted">
-                                <i class="fas fa-calendar-plus me-1"></i> Date Registered: {{ client.date_registered }}
+                                <i class="fas fa-calendar-plus me-1"></i> Date Registered: {{ client.registered_at}}
                             </small>
                         </div>
                         <div class="col-md-6">
                             <small class="text-muted">
-                                <i class="fas fa-clock me-1"></i> Last Updated: {{ client.last_updated }}
+                                <i class="fas fa-clock me-1"></i> Registered By: {{ client.registered_by_user.username }}
                             </small>
                         </div>
                     </div>

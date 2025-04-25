@@ -43,7 +43,7 @@
                     <thead>
                         <tr>
                             <th>Full Name</th>
-                            <th>Age</th>
+                            <th>Date of Birth</th>
                             <th>Gender</th>
                             <th>Contact Information</th>
                             <th>Date of Registration</th>
@@ -54,13 +54,13 @@
                         {% for client in clients %}
                         <tr>
                             <td>{{ client.full_name }}</td>
-                            <td>{{ client.age }}</td>
+                            <td>{{ client.date_of_birth.strftime('%Y-%m-%d') }}</td>
                             <td>{{ client.gender }}</td>
                             <td>
                                 <div>Phone: {{ client.phone }}</div>
                                 <div>Email: {{ client.email }}</div>
                             </td>
-                            <td>{{ client.registration_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ client.registered_at.strftime('%Y-%m-%d') }}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="{{ url_for('main.client_profile', client_id=client.id) }}" 
