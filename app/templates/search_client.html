@@ -100,6 +100,10 @@
                 const program = programFilter.value;
                 const age = ageFilter.value;
 
+                // get the upper and lower bounds of the age
+                const ageLower = age.split('-')[0];
+                const ageUpper = age.split('-')[1];
+
                 // Don't search if no criteria provided
                 if (searchTerm.length < 2 && !program && !age) {
                     searchResults.innerHTML = '<tr><td colspan="6" class="text-center">Please enter at least 2 characters or select a filter</td></tr>';

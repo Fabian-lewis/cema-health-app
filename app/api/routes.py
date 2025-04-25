@@ -153,10 +153,16 @@ def search_clients_api():
 
         if age:
             try:
-                age = int(age)
+                ageLower, ageUpper = map(int, age.split('-'))
+
                 today = date.today()
-                dob_start = today - timedelta(days=(age + 1) * 365)
-                dob_end = today - timedelta(days=age * 365)
+                
+                # Person just turned age_upper -> born 'today - age_upper years'
+                dob_start = today - timedelta(days=ageUpper * 365)
+
+                # Person is about to turn age_lower -> born 'today - age_lower years'
+                dob_end = today - timedelta(days=(ageLower + 1) * 365)
+
                 query = query.filter(Client.date_of_birth.between(dob_start, dob_end))
             except ValueError:
                 pass
