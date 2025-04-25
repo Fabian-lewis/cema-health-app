@@ -118,7 +118,7 @@
                     const params = new URLSearchParams();
                     if (searchTerm.length >= 2) params.append('q', searchTerm);
                     if (program) params.append('program', program);
-                    if (age) params.append('age', age);
+                    if (ageLower && ageUpper) params.append('age', `${ageLower}-${ageUpper}`);
 
                     const response = await fetch(`/api/search-clients?${params.toString()}`);
                     
