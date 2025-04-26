@@ -13,6 +13,7 @@ A Flask-based web application built to manage health programs, clients, appointm
 
 ---
 
+
 ## 📁 Project Structure
 
 ```
@@ -50,6 +51,7 @@ health_program/ ├── app/
 └── .venv – Environment variables
 
 ```
+
 
 ## 📌 Key Features
 
@@ -102,6 +104,8 @@ health_program/ ├── app/
 - upcoming appointments (planned) - to display booked appointments for the client
 
 
+---
+
 ## 📌Admin Specific Pages
 
 #### 1. **Manage Users Page**
@@ -124,6 +128,7 @@ health_program/ ├── app/
 
 
 ---
+
 
 ## 🧩 Core Models & Relationships
 
@@ -178,6 +183,7 @@ Notification —— (1) Status
 Appointment —— (1) Status
 
 ```
+---
 ## ✅ Current System Functionality
 - Full database schema with defined relationships
 - User roles and access control implemented
@@ -186,14 +192,16 @@ Appointment —— (1) Status
 - Enrollment logic with duplication checks (active status only)
 - Search functionality with links to client's profile
 
+---
 ## 🛠️ What to Work On
   1. Add admin reports and analytics
   2. Implement email notifications
   3. Improve form validation and error messages
   4. Notifications module
   5. Appointments module - schedule and book
- 
-## 📷 Screenshots
+
+ ----
+ ## 📷 Screenshots
 
 ### 1. **Login**
 ![login](app/static/images/login_test.JPG)
@@ -216,11 +224,16 @@ Appointment —— (1) Status
 ### 7. **Search Clients**
 ![search clients](app/static/images/search_clients.JPG)
 
+---
+
 ## 🤝 Contributions & Feedback
 **Feel free to fork the repo, raise issues, or suggest improvements.**
 
+---
+
 ## 📄 License
-**MIT License – feel free to use and modify for personal or educational use.**
+MIT License – feel free to use and modify for personal or educational use.
+---
 
 
 ## 👨‍💻 Author
