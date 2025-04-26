@@ -2,6 +2,14 @@ from flask import Blueprint, jsonify, request, current_app
 from app.model import Client, Program, Enrollment, Appointment, db
 from datetime import datetime, timedelta, date
 from sqlalchemy.orm import joinedload
+from functools import wraps
+from flask_cors import cross_origin
+
+def public_route(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        return func(*args, **kwargs)
+    return decorated
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -204,6 +212,8 @@ This api exposes the client profile to the frontend
 It returns the client profile, their enrollments, their dropped enrollments, and their appointments
 """
 @api.route('/client/<int:client_id>', methods=['GET'])
+@public_route
+@cross_origin(origin='https://cemaexternalsite.netlify.app/') 
 def get_client_profile_api(client_id):
     client = Client.query.get_or_404(client_id)
 
