@@ -53,6 +53,10 @@ The public API does not require user authentication but remains secure from unau
 
 ## 4. **Link for the deployed app***
 - [My Solution](https://cema-health-app.onrender.com)
+
+## 5. **Link to power point slides***
+- [Power Point Slides](https://docs.google.com/presentation/d/1SN1s1v_pYQABtrnahgTdaRmliyaDT0F59j6oJ3ls0kY/edit?usp=sharing)
+
 ---
 
 ## 🚀 Technologies Used
