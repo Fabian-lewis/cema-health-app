@@ -1,6 +1,55 @@
 # 🏥 Health Program Management System
 
+## Overview
 A Flask-based web application built to manage health programs, clients, appointments, and notifications for clinics or health organizations. It features role-based access for admins, doctors, and clients.
+
+Purpose:
+This project is a web-based system designed to manage healthcare program enrollments, client profiles, and doctor appointments efficiently. It provides both administrative and medical staff with easy-to-use dashboards for daily operations, while also offering a controlled public API for external integrations.
+
+Main Features:
+🛠 Admin Dashboard
+Manage and oversee users (doctors and other admins).
+
+Register new healthcare programs (e.g., TB, HIV, Malaria programs).
+
+View system-wide enrollment and appointment statistics.
+
+🩺 Doctor Dashboard
+View assigned clients and their active enrollments.
+
+Schedule and manage client appointments.
+
+Update appointment statuses (attended, canceled, rescheduled).
+
+👤 Client Enrollment
+Register new clients into healthcare programs.
+
+Manage client enrollment statuses (active, dropped, completed).
+
+🔍 Client Search
+Flexible search functionality allowing quick lookup of clients by name, phone, or ID.
+
+Access detailed client profiles with enrollment and appointment history.
+
+🌐 Public API Access
+A public API endpoint is available to retrieve client profile information.
+
+Only authorized external websites can access the public API (controlled CORS settings).
+
+The public API does not require user authentication but remains secure from unauthorized origins.
+
+## Important Resources - User Logins and External Website Link
+### 1. **Admin DashBoard**
+- Username : **admin**
+- Password: **admin123**
+  
+### 2. **Doctor Dashboard**
+- Username : **fabian**
+- password : **fabian123**
+  
+### 3. **Link to external authorized website to test public API**
+- [External website](https://cemaexternalsite.netlify.app/)
+- [Github repository](https://github.com/Fabian-lewis/cema-health-app)
 
 ---
 
@@ -125,8 +174,6 @@ health_program/ ├── app/
 
 ### 3. **Reports Page**
 - (Plannned) - To display metric statistics and analysis 
-
-
 ---
 
 
@@ -225,6 +272,7 @@ Appointment —— (1) Status
 ![search clients](app/static/images/search_clients.JPG)
 
 ---
+
 
 ## 🤝 Contributions & Feedback
 **Feel free to fork the repo, raise issues, or suggest improvements.**
