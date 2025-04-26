@@ -51,6 +51,8 @@ The public API does not require user authentication but remains secure from unau
 - [External website](https://cemaexternalsite.netlify.app/)
 - [Github repository](https://github.com/Fabian-lewis/cema-external-website)
 
+## 4. **Link for the deployed app***
+- [My Solution](https://cema-health-app.onrender.com)
 ---
 
 ## 🚀 Technologies Used
