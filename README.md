@@ -49,7 +49,7 @@ The public API does not require user authentication but remains secure from unau
   
 ### 3. **Link to external authorized website to test public API**
 - [External website](https://cemaexternalsite.netlify.app/)
-- [Github repository](https://github.com/Fabian-lewis/cema-health-app)
+- [Github repository](https://github.com/Fabian-lewis/cema-external-website)
 
 ---
 
